@@ -1,0 +1,94 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Product;
+use App\Models\Category;
+use Illuminate\Http\Request;
+
+class ProductController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     */
+    public function index()
+    {
+        $product = Product::with('category')->latest()->get();
+        $category = Category::orderBy('name')->get();
+
+        return inertia('products/index', [
+            'products' => $product,
+            'categories' => $category,
+        ]);
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        //
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(StoreProductRequest $request) : RedirectResponse
+    {
+        $data = $request->validated();
+
+        if ($request->hasFile('image')) {
+            $data['image'] = $request->file('image')->store('products', 'public');
+        }
+        Product::create($data);
+        return redirect()->route('products.index');
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(Product $product)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(Product $product)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(UpdateProductRequest $request, Product $product) : RedirectResponse
+    {
+        $data = $request->validated();
+
+        if ($request->hasFile('image')) {
+            // Delete the old image if it exists
+            if ($product->image) {
+                Storage::disk('public')->delete($product->image);
+            }
+            $data['image'] = $request->file('image')->store('products', 'public');
+        }
+
+        $product->update($data);
+
+        return redirect()->route('products.index');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(Product $product)
+    {
+        if ($product->image) {
+                Storage::disk('public')->delete($product->image);
+        }
+        $product->delete();
+        return redirect()->route('products.index');
+    }
+}
