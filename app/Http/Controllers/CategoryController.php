@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use Illuminate\Http\Request;
+use App\Http\Requests\UpdateCategoryRequest;
+use Illuminate\Http\RedirectResponse;
 
 class CategoryController extends Controller
 {
@@ -35,10 +37,8 @@ class CategoryController extends Controller
             'description' => 'nullable|string',
         ]);
 
-        // 2. Database ထဲ သိမ်းပါ
         Category::create($validated);
 
-        // 3. Categories Page ဆီကို Redirect ပြန်လုပ်ပါ
         return redirect()->route('categories.index');
     }
 
@@ -62,7 +62,7 @@ class CategoryController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Category $category) : RedirectResponse
+    public function update(UpdateCategoryRequest $request, Category $category) : RedirectResponse
     {
         $category->update($request->validated());
         return redirect()->route('categories.index');

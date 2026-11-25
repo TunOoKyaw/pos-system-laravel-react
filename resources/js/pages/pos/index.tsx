@@ -1,0 +1,72 @@
+import { Input } from '@/components/ui/input';
+import { CartItem, Product } from '@/types';
+import { Head, Link } from '@inertiajs/react';
+import { LayoutGrid, Search } from 'lucide-react';
+import { useState } from 'react';
+import ProductGrid from './product-grid';
+import CartPanel from './cart-pannel';
+import { useCart } from './use-cart';
+import CheckoutDialog from './checkout-dialog';
+
+interface Props {
+    products: Product[];
+}
+
+export default function PosIndex({ products }: Props) {
+    const [search, setSearch] = useState('');
+    const { items, subtotal, addItem: addToCart, removeItem, setQuantity, clear } = useCart();
+    const [checkoutOpen, setCheckoutOpen] = useState(false);
+
+    const filtered = products.filter(
+        (product) =>
+            product.name.toLowerCase().includes(search.toLowerCase()) ||
+            product.category.name.toLowerCase().includes(search.toLowerCase()),
+    );
+
+    return (
+        <>
+            <Head title="Point Of Sale" />
+            <div className="flex h-screen flex-col bg-background">
+                {/* top bar */}
+                <div className="flex items-center gap-4 border-b px-4 py-3">
+                    <Link
+                        href="/dashboard"
+                        className="flex items-center gap-2 text-sm font-medium text-muted-foreground"
+                    >
+                        <LayoutGrid className="h-5 w-5" />
+                    </Link>
+                    <span className="font-semibold">Point of Sale</span>
+                    <div className="relative ml-4 max-w-sm flex-1">
+                        <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                        <Input
+                            className="pl-9"
+                            placeholder="Search products..."
+                            value={search}
+                            onChange={(e) => setSearch(e.target.value)}
+                        />
+                    </div>
+                </div>
+
+                {/* main area */}
+                <div className="flex flex-1 overflow-hidden">
+                    <ProductGrid products={filtered} onAddToCart={addToCart} />
+                    <CartPanel 
+                        items={items} 
+                        subtotal={subtotal} 
+                        onRemove={removeItem}
+                        onSetQuantity={setQuantity}
+                        onClear={clear}
+                        onCheckout={() => setCheckoutOpen(true)}
+                    />
+                </div>
+            </div>
+            <CheckoutDialog
+                open={checkoutOpen}
+                items={items}
+                subtotal={subtotal}
+                onSuccess={clear}
+                onClose={() => setCheckoutOpen(false)}
+            />
+        </>
+    );
+}

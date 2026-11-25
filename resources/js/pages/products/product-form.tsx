@@ -1,12 +1,23 @@
-import { useForm } from "@inertiajs/react";
-import { Category, Product } from "@/types";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
-import InputError from "@/components/input-error";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { toast } from "sonner";
+import { useForm } from '@inertiajs/react';
+import { Category, Product } from '@/types';
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
+import InputError from '@/components/input-error';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
+import { toast } from 'sonner';
 
 interface Props {
     categories: Category[];
@@ -31,7 +42,11 @@ export default function ProductForm({ categories, product, onClose }: Props) {
         const options = {
             forceFormData: true,
             onSuccess: () => {
-                toast.success(product ? 'Product updated successfully' : 'Product created successfully');
+                toast.success(
+                    product
+                        ? 'Product updated successfully'
+                        : 'Product created successfully',
+                );
                 reset();
                 onClose();
             },
@@ -48,7 +63,9 @@ export default function ProductForm({ categories, product, onClose }: Props) {
         <Dialog open onOpenChange={onClose}>
             <DialogContent className="max-w-w-lg">
                 <DialogHeader>
-                    <DialogTitle>{product ? 'Edit Product' : 'Add Product'}</DialogTitle>
+                    <DialogTitle>
+                        {product ? 'Edit Product' : 'Add Product'}
+                    </DialogTitle>
                 </DialogHeader>
 
                 <form onSubmit={submit} className="space-y-4">
@@ -66,14 +83,19 @@ export default function ProductForm({ categories, product, onClose }: Props) {
                         <Label htmlFor="category_id">Category</Label>
                         <Select
                             value={data.category_id}
-                            onValueChange={(value) => setData('category_id', value)}
+                            onValueChange={(value) =>
+                                setData('category_id', value)
+                            }
                         >
                             <SelectTrigger>
                                 <SelectValue placeholder="Select category" />
                             </SelectTrigger>
                             <SelectContent>
                                 {categories.map((category) => (
-                                    <SelectItem key={category.id} value={category.id.toString()}>
+                                    <SelectItem
+                                        key={category.id}
+                                        value={category.id.toString()}
+                                    >
                                         {category.name}
                                     </SelectItem>
                                 ))}
@@ -91,7 +113,9 @@ export default function ProductForm({ categories, product, onClose }: Props) {
                                 step="0.01"
                                 min="0.01"
                                 value={data.price}
-                                onChange={(e) => setData('price', e.target.value)}
+                                onChange={(e) =>
+                                    setData('price', e.target.value)
+                                }
                             />
                             <InputError message={errors.price} />
                         </div>
@@ -103,7 +127,9 @@ export default function ProductForm({ categories, product, onClose }: Props) {
                                 type="number"
                                 min="0"
                                 value={data.stock}
-                                onChange={(e) => setData('stock', e.target.value)}
+                                onChange={(e) =>
+                                    setData('stock', e.target.value)
+                                }
                             />
                             <InputError message={errors.stock} />
                         </div>
@@ -114,7 +140,9 @@ export default function ProductForm({ categories, product, onClose }: Props) {
                         <Input
                             id="description"
                             value={data.description}
-                            onChange={(e) => setData('description', e.target.value)}
+                            onChange={(e) =>
+                                setData('description', e.target.value)
+                            }
                         />
                         <InputError message={errors.description} />
                     </div>
@@ -124,7 +152,9 @@ export default function ProductForm({ categories, product, onClose }: Props) {
                         <Input
                             id="image"
                             type="file"
-                            onChange={(e) => setData('image', e.target.files?.[0] || null)}
+                            onChange={(e) =>
+                                setData('image', e.target.files?.[0] || null)
+                            }
                         />
                         <InputError message={errors.image} />
                     </div>
@@ -134,13 +164,21 @@ export default function ProductForm({ categories, product, onClose }: Props) {
                             type="checkbox"
                             id="is_active"
                             checked={data.is_active}
-                            onChange={e => setData('is_active', e.target.checked)}
+                            onChange={(e) =>
+                                setData('is_active', e.target.checked)
+                            }
                         />
-                        <Label htmlFor="is_active">Active (Visible in POS)</Label>
+                        <Label htmlFor="is_active">
+                            Active (Visible in POS)
+                        </Label>
                     </div>
 
                     <div className="flex justify-end space-x-2 pt-4">
-                        <Button variant="outline" type="button" onClick={onClose}>
+                        <Button
+                            variant="outline"
+                            type="button"
+                            onClick={onClose}
+                        >
                             Cancel
                         </Button>
                         <Button type="submit" disabled={processing}>

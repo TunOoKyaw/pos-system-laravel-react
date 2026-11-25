@@ -141,3 +141,20 @@
         @apply bg-background text-foreground;
     }
 }
+
+@media print {
+    .no-print {
+        display: none !important;
+    }
+    body {
+        background: white !important;
+        color: black !important;
+    }
+
+    .receipt {
+        box-shadow: none !important;
+        border: none !important;
+        max-width: 100%;
+        padding: 0;
+    }
+}
